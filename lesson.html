@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit One - What are you interested in?</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: larger;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 1em;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    main {
+      max-width: 600px;
+      background: white;
+      padding: 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    button {
+      background: none;
+      border: 2px solid #0078d4;
+      color: #0078d4;
+      font-size: 20px;
+      margin: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0078d4;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    input[type="number"] {
+      font-size: 14px;
+      width: 60px;
+      margin-right: 10px;
+      text-align: center;
+    }
+
+    #keyWords {
+      text-align: center;
+      color: #0078d4;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    #english {
+      color: #444;
+      background: #f0f8ff;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+    }
+
+    #scrambledText {
+      color: #d9534f;
+      background: #fff3cd;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+      margin: 0.5em 0 0 0;
+      font-style: italic;
+      border-left: 4px solid #f0ad4e;
+      flex: 1;
+    }
+
+    #scrambleCheckboxContainer {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 0.5em;
+    }
+
+    #scrambleCheckboxLabel {
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      margin-top: 1em;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    #scrambleCheckbox {
+      margin-top: 1em;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: #f0ad4e;
+      flex-shrink: 0;
+    }
+
+    #q {
+      background: #0078d4;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-top: 1em;
+      text-align: center;
+    }
+
+    details {
+      margin-top: 0.5em;
+    }
+
+    small {
+      color: #777;
+      font-weight: normal;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1em 0;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    footer span {
+      color: #0078d4;
+      font-weight: bold;
+    }
+
+    #arabic {
+      direction: rtl;
+      text-align: right;
+      background: #fff8e1;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.6em;
+      }
+      #q {
+        font-size: 0.9em;
+      }
+      button {
+        font-size: 18px;
+        padding: 4px 8px;
+      }
+    }
+
+    #questionBasedOnAudio {
+      color: blue;
+      text-align: left;
+    }
+
+    #questionBasedOnAudio li,
+    #answer li {
+      margin-bottom: 0.8em;
+    }
+
+    #questionBasedOnAudio ol {
+      padding-left: 1em;
+    }
+
+    .tts-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    /* Quiz Mode Styles */
+    .quiz-audio-section {
+      margin-bottom: 1.5em;
+      padding: 1em;
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+    }
+
+    .quiz-audio-label {
+      font-weight: bold;
+      color: #856404;
+      margin-bottom: 0.5em;
+      display: block;
+    }
+
+    #quizAudio {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 0.5em;
+      border-radius: 5px;
+    }
+
+    .audio-instruction {
+      font-size: 0.95em;
+      color: #856404;
+      font-style: italic;
+    }
+
+    .quiz-question-section {
+      margin-bottom: 1.5em;
+      padding: 1em;
+      background: #f9f9f9;
+      border: 2px solid #0078d4;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+
+    .quiz-question-text {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .quiz-question-btn {
+      background: none;
+      border: 2px solid #f39c12;
+      color: #f39c12;
+      font-size: 18px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .quiz-question-btn:hover {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .quiz-options {
+      margin: 1em 0;
+      padding: 1em;
+      background: #f0f8ff;
+      border-left: 4px solid #0078d4;
+      border-radius: 4px;
+    }
+
+    .quiz-option {
+      margin-bottom: 1em;
+      padding: 0.8em;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quiz-option:hover {
+      border-color: #0078d4;
+      background: #f0f8ff;
+    }
+
+    .quiz-option-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .quiz-option input[type="radio"] {
+      margin-right: 0.5em;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      accent-color: #0078d4;
+      flex-shrink: 0;
+    }
+
+    .quiz-option label {
+      cursor: pointer;
+      font-size: 1em;
+      display: inline;
+      flex: 1;
+    }
+
+    .option-speak-btn {
+      background: none;
+      border: 1px solid #f39c12;
+      color: #f39c12;
+      font-size: 16px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: 0.2s;
+    }
+
+    .option-speak-btn:hover {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5em;
+      margin-top: 1.5em;
+      flex-wrap: wrap;
+    }
+
+    .quiz-nav-btn {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    #quizProgress {
+      text-align: center;
+      font-weight: bold;
+      color: #0078d4;
+      margin-bottom: 1em;
+      font-size: 1.1em;
+    }
+
+    #quizScore {
+      background: #e8f5e9;
+      border: 2px solid #4caf50;
+      padding: 1em;
+      border-radius: 8px;
+      text-align: center;
+      margin: 1em 0;
+      font-size: 1.2em;
+    }
+
+    #quizScore.fail {
+      background: #ffebee;
+      border-color: #f44336;
+    }
+
+    .speaking-indicator {
+      color: #f39c12;
+      font-weight: bold;
+      display: none;
+      margin: 0.5em 0;
+      font-size: 0.95em;
+    }
+
+    .speaking-indicator.active {
+      display: block;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .pulse {
+      display: inline-block;
+      animation: pulse 1s infinite;
+    }
+
+    #quizMode {
+      display: none;
+    }
+
+    #quizMode.active {
+      display: block;
+    }
+
+    #lessonMode {
+      display: block;
+    }
+
+    #lessonMode.hidden {
+      display: none;
+    }
+    #playList {
+        width: 100%;
+        max-width: 600px;   /* match your main width */
+        box-sizing: border-box;
+        font-size: 16px;
+        padding: 10px 12px;
+        margin: 0.5em 0;
+        border: 2px solid #0078d4;
+        border-radius: 6px;
+      }
+      /* Back button (lesson -> presentation) */
+#backToPresentation{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin: 0.5em 0 1em 0;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111827;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease;
+}
+
+#backToPresentation:hover{
+  transform: translateY(-1px);
+  background:#f8fafc;
+  border-color:#9ca3af;
+  box-shadow: 0 10px 22px rgba(17, 24, 39, 0.12);
+}
+
+#backToPresentation:active{
+  transform: translateY(0);
+}
+
+#backToPresentation .back-arrow{
+  width:28px;
+  height:28px;
+  border-radius:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#eef2ff;
+  color:#4f46e5;
+  font-size:16px;
+}
+  </style>
+</head>
+
+<body role="document">
+  <!-- Add this button near the top of your body (e.g., right under <body ...>) -->
+<button
+  id="backToPresentation"
+  type="button"
+  onclick="location.href='presentation.html'"
+>
+  <span aria-hidden="true" class="back-arrow">←</span>
+  Back to Presentation
+</button>
+  <main role="main" aria-label="Lesson and quiz player interface">
+
+    <!-- Shared speaking indicator (works in both Lesson and Quiz modes) -->
+    <div class="speaking-indicator" id="speakingIndicator" role="status" aria-live="polite">
+      <span class="pulse">🔊</span> Speaking...
+    </div>
+
+    <!-- LESSON MODE -->
+    <section id="lessonMode">
+      <p id="speaker" aria-label="Speaker name"></p>
+      <p id="q" aria-live="polite"></p>
+      <p id="keyWords" aria-label="Keywords"></p>
+
+      <input type="text" id="playList" placeholder="enter play list; separate number by commas.">
+      <label style="display:block; margin-top:0.5em; font-weight:normal;">
+        <input type="checkbox" id="usePlayList" />
+        Use playlist (numbers separated by commas)
+      </label>
+
+      <details id="definition" aria-label="Definition section">
+        <summary aria-label="Show or hide definition">Definition</summary>
+        <p id="def"></p>
+      </details>
+
+      <details id="illustrations" style="display:none;" aria-label="Illustration section">
+        <summary aria-label="Show or hide illustration">Illustration</summary>
+        <img id="image" alt="Related illustration" width="200" height="200" style="display:none;">
+      </details>
+
+      <details id="englishDetails" open aria-label="English script of audio">
+        <summary aria-label="Show or hide English script">English Script:</summary>
+        <p id="english"></p>
+      </details>
+
+      <div id="scrambleCheckboxContainer">
+        <label id="scrambleCheckboxLabel" for="scrambleCheckbox">Scramble Script:</label>
+        <input
+          type="checkbox"
+          id="scrambleCheckbox"
+          aria-label="Toggle scrambled script"
+        />
+      </div>
+      <p id="scrambledText"></p>
+
+      <details id="arabicDetails" open aria-label="Arabic translation of script">
+        <summary aria-label="Show or hide Arabic translation">Arabic Translation:</summary>
+        <p id="arabic"></p>
+      </details>
+
+      <p id="refer_to_container"><strong>Refer to:</strong> <span id="refer_to"></span></p>
+      <p id="back_to_container"><strong>Back to:</strong> <span id="back_to"></span></p>
+
+      <audio id="audio" controls aria-label="Audio player">
+        <source id="audioSource" src="" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <hr>
+
+      <div class="controls" role="group" aria-label="Navigation controls">
+        <input
+          type="number"
+          id="audioIndex"
+          min="1"
+          placeholder="#"
+          aria-label="Enter clip number"
+        />
+
+        <button id="search" aria-label="Search for audio by number">&#128269;</button>
+
+        <button id="prev" aria-label="Previous audio clip">&#9664;</button>
+        <button id="next" aria-label="Next audio clip">&#9654;</button>
+
+        <label aria-label="Autoplay next audio">
+          <input type="checkbox" id="autoPlay" aria-checked="false" />
+          Auto play next audio clip
+        </label>
+
+        <div id="questionBasedOnAudio"></div>
+      </div>
+
+      <details aria-label="Text-to-speech options">
+        <summary aria-label="Show or hide text-to-speech controls">TTS</summary>
+
+        <div class="tts-buttons" role="group" aria-label="TTS controls">
+          <button id="speakEnglish" aria-label="Text to speech: read English script">TTS-English</button>
+          <button id="speakArabic" aria-label="Text to speech: read Arabic translation">TTS-Arabic</button>
+          <button id="stop" aria-label="Stop text to speech">Stop TTS</button>
+          <button id="speakSelection" aria-label="Text to speech: read selected text">TTS-Selected</button>
+        </div>
+      </details>
+
+      <div>
+        <details id="answerDetails" aria-label="Answer section">
+          <summary aria-label="Show or hide answer">Answer</summary>
+          <div id="answer"></div>
+        </details>
+      </div>
+
+      <button id="startQuizBtn" aria-label="Start grammar quiz mode">Start Quiz Mode</button>
+
+      <hr>
+
+      <small aria-label="Tip: Use arrow keys">💡 Tip: Use ← / → to navigate.</small>
+    </section>
+
+    <!-- QUIZ MODE -->
+    <section id="quizMode" role="region" aria-label="Grammar quiz based on audio">
+      <h2>Unit One Quiz - What are you interested in?</h2>
+
+      <div id="quizProgress" role="status" aria-live="polite"></div>
+
+      <!-- Audio Player for Quiz -->
+      <div class="quiz-audio-section">
+        <label class="quiz-audio-label" for="quizAudio">🔊 Listen to Audio Clip:</label>
+        <audio id="quizAudio" controls aria-label="Quiz audio clip">
+          <source id="quizAudioSource" src="" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <p class="audio-instruction">Listen carefully to the audio clip, then answer the question below.</p>
+      </div>
+
+      <div class="quiz-question-section">
+        <div class="quiz-question-text">
+          <p id="quizQuestion" role="heading" aria-level="2"></p>
+        </div>
+        <button id="speakQuestionBtn" class="quiz-question-btn" aria-label="Read question aloud">🔊</button>
+      </div>
+
+      <div class="quiz-options" role="group" aria-label="Answer options">
+        <div id="quizOptions"></div>
+      </div>
+
+      <div class="quiz-navigation">
+        <button id="quizPrev" class="quiz-nav-btn" aria-label="Previous question">← Previous</button>
+        <button id="quizNext" class="quiz-nav-btn" aria-label="Next question or submit quiz">Next →</button>
+      </div>
+
+      <button id="exitQuiz" aria-label="Exit quiz and return to lessons">Exit Quiz</button>
+
+      <hr>
+
+      <div id="quizScore" style="display: none;" role="region" aria-label="Quiz results">
+        <h2>Quiz Results</h2>
+        <p id="scoreText"></p>
+        <p id="scoreMessage"></p>
+      </div>
+
+      <div id="quizReview" style="display: none;">
+        <details open aria-label="Review your answers">
+          <summary>Review Answers</summary>
+          <div id="reviewContent"></div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <p>Created by <span>Eltayeb Mohamed</span> | <span>© 2025 Eltayeb Mohamed</span>. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const utterance = new SpeechSynthesisUtterance();
+    let currentAudioIndex = 0;
+
+    // Playlist navigation state
+    let usePlayListMode = false;
+    let navIndices = []; // indices into Sentences
+    let navPos = 0;      // position inside navIndices
+
+    let quizModeActive = false;
+    let currentQuizQuestion = 0;
+    let quizAnswers = [];
+    let isSpeaking = false;
+    let isScrambled = false;
+
+    const Sentences = [
+        /* your entire array unchanged */
+            {
+        speaker: `Mei, Sara, Ben, Hiro, Hamad `,
+        keyWord: ``,
+        definition: ``,
+        english: `
+        
+        Mei:	Good morning. I’m Mei Cheng with University Radio at UFM 90.5. It’s the start of another school year. 
+        It is sometimes hard to meet people at a new school. One good way to meet people is through activities outside of class. 
+        Today we want to learn more about hobbies on campus . With me on the phone are Sara, Hiro, Hamad, and Ben. Hello, everyone. Thank you for joining us this morning.
+        Sara:	Thank you, Mei. Hello, everyone.<br>
+        Ben:	Yes, nice to meet you all.<br>
+        Mei:	Sara, let’s start with you. What do you like to do when you’re not in class?<br>
+        Sara:	Well, I have a few hobbies. For example, I belong to the hiking club. We go hiking once a month. 
+        I have a lot of friends now in the club. I am also interested in woodworking projects, like building my own shelves.<br>
+        Mei:	Yes, clubs are a good way to meet people. Hiro, do you belong to any clubs?<br>
+        Hiro:	No, not right now, but I’m on a soccer team. And I read a lot of books on history and go to history talks on campus.
+         Also, I’m interested in photography. On weekends, I take a lot of pictures on my phone with my friends. <br>
+        Mei:	Oh, wow, I’m in the photography club. We have a lot of fun. Hamad, how about you? What are you interested in?<br>
+        Hamad:	I’m on the soccer team with Hiro. And I really like sports, so I play tennis, too. I’m also good at math, so I’m in 
+        the math club. <br>  Mei:	That’s great. Ben, what do you like to do?<br>
+        Ben:	Hmm. I’m not very good at sports, but I like to play video games, and I play with other people online.
+         I also read a lot of books, and I get together with friends on Friday nights. . . . Oh, and I collect baseball hats. <br>
+        Mei:	Baseball hats! That’s fun! OK, so we have talked about clubs, and playing sports, and hobbies like photography and video games. 
+        Does anyone want to add anything else? Hamad?<br>
+        Hamad:	I also like to bake cookies. It helps me relax . I give them to my friends when we get together on weekends.
+         They like the cookies a lot. <br>
+        Sara:	What about you, Mei?<br>
+        Mei:	Oh, I like to bake and cook also. I make dinner with my friends on Saturday nights. It’s a lot of fun. If you find something you’re good at and are interested in, it helps you enjoy school more.
+
+        
+        `,
+        arabic: ` 
+        
+        مي: صباح الخير. أنا مي تشنغ مع إذاعة الجامعة على محطة UFM 90.5. إنها بداية عام دراسي جديد. أحيانًا يكون من الصعب التعرف على الناس في مدرسة جديدة. إحدى الطرق الجيدة للتعرف على الناس هي من خلال الأنشطة خارج الصف. اليوم نريد معرفة المزيد عن الهوايات في الحرم الجامعي. معي على الهاتف سارة، هيرو، حمد، وبن. مرحبًا بالجميع. شكرًا لانضمامكم إلينا هذا الصباح.
+سارة: شكرًا لكِ، مي. مرحبًا بالجميع.
+بن: نعم، سعيد بلقائكم جميعًا.
+مي: سارة، لنبدأ بكِ. ماذا تحبين أن تفعلي عندما لا تكوني في الصف؟
+سارة: حسنًا، لدي بعض الهوايات. على سبيل المثال، أنا عضو في نادي المشي لمسافات طويلة. نذهب للتنزه مرة واحدة في الشهر. لدي العديد من الأصدقاء الآن في النادي. أنا أيضًا مهتمة بمشاريع النجارة، مثل بناء رفوفي الخاصة.
+مي: نعم، الأندية طريقة جيدة للتعرف على الناس. هيرو، هل أنت عضو في أي نادي؟
+هيرو: لا، ليس الآن، لكنني في فريق كرة القدم. وأقرأ الكثير من الكتب عن التاريخ وأحضر محاضرات تاريخية في الحرم الجامعي. أيضًا، 
+
+أيضًا، أنا مهتمة بالتصوير الفوتوغرافي. في عطلات نهاية الأسبوع، ألتقط الكثير من الصور على هاتفي مع أصدقائي. 
+مي: أوه، واو، أنا في نادي التصوير الفوتوغرافي. نحن نستمتع كثيرًا. حمد، ماذا عنك؟ ما الذي تهتم به؟
+حمد: أنا في فريق كرة القدم مع هيرو. وأنا أحب الرياضة كثيرًا، لذلك ألعب التنس أيضًا. وأنا جيد في الرياضيات، لذلك أنا في نادي الرياضيات.
+مي: هذا رائع. بن، ماذا تحب أن تفعل؟
+بن: همم. لست جيدًا جدًا في الرياضة، لكني أحب لعب ألعاب الفيديو، وألعب مع الآخرين عبر الإنترنت. أنا أيضًا أقرأ الكثير من الكتب، وألتقي مع أصدقائي في ليلة الجمعة... أوه، وأنا أجمع قبعات البيسبول.
+مي: قبعات البيسبول! هذا ممتع! حسنًا، لقد تحدثنا عن النوادي وممارسة الرياضة والهوايات مثل التصوير الفوتوغرافي وألعاب الفيديو. هل يرغب أي شخص في إضافة شيء آخر؟ حمد؟
+حمد: يعجبني أيضًا خبز الكعك. يساعدني على الاسترخاء. أعطيها لأصدقائي عندما نلتقي في عطلات نهاية الأسبوع. إنهم يعجبهم الكعك كثيرًا.
+سارة: وماذا عنكِ يا مي؟
+أوه، أنا أحب الخبز والطبخ أيضًا. أعد العشاء مع أصدقائي في ليالي السبت. إنه ممتع جدًا. إذا وجدت شيئًا تجيده وتهتم به، فإنه يساعدك على الاستمتاع بالمدرسة أكثر.
+        
+        `,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Q3eSE_LS0_U01_02_Listening_ActivitiesA_B_F.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+
+      //1
+
+            {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Good morning.`,
+        arabic: `صباح الخير.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `goodmorning.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //2
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I’m Mei Cheng.`,
+        arabic: `أنا مي تشينغ.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I’m Mei Cheng.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //3
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `with University Radio at UFM 90.`,
+        arabic: `مع راديو الجامعة في UFM 90.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `with University Radio at UFM 90.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //4
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `It’s the start of another school year.`,
+        arabic: `إنه بداية عام دراسي جديد.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `It’s the start of another school year.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //5
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `It is sometimes hard.`,
+        arabic: `أحيانًا يكون صعبًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `It is sometimes hard.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //6
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `to meet people at a new school.`,
+        arabic: `لمقابلة الناس في مدرسة جديدة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `to meet people at a new school.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //7
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `One good way to meet people is through activities`,
+        arabic: `طريقة جيدة للتعرف على الناس هي من خلال الأنشطة`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `One good way to meet people is through activities.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //8
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `outside of class.`,
+        arabic: `خارج الصف.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `outside of class.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //9 Today we want to learn more about hobbies
+      {
+        speaker: `Mei:`,
+        keyWord: `hobbies`,
+        definition: `activities - you do them for fun`,
+        english: `Today we want to learn more about hobbies.`,
+        arabic: `اليوم نريد أن نتعلم المزيد عن الهوايات.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Today we want to learn more about hobbies.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //10
+      {
+        speaker: `Mei:`,
+        keyWord: `campus`,
+        definition: `the area where the buildings of a college are`,
+        english: `on campus.`,
+        arabic: ` في الحرم الجامعي`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `on campus.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+       {
+        speaker: `Mei:`,
+        keyWord: `hobbies`,
+        definition: `activities - you do them for fun`,
+        english: `Today we want to learn more about hobbies on campus.`,
+        arabic: `اليوم نريد أن نتعلم المزيد عن الهوايات في الحرم الجامعي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Today we want to learn more about hobbies on campus.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      
+       
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `With me on the phone are Sara`,
+        arabic: `معي على الهاتف سارة`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `With me on the phone are Sara.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //11
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hiro, Hamad, and Ben.`,
+        arabic: `هيرو، حمد، وبين.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Hiro, Hamad, and Ben.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //12
+       {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hello, everyone.`,
+        arabic: `مرحبًا، جميعًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Hello, everyone.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //13
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Thank you for joining us this morning.`,
+        arabic: `شكراً لانضمامكم إلينا هذا الصباح.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Thank you for joining us this morning.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //14
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Thank you, Mei.`,
+        arabic: `شكراً لكِ، مي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Thank you, Mei.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //15
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hello, everyone!`,
+        arabic: `مرحبًا بالجميع`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Hello, everyone 2.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //16
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Yes, nice to meet you all.`,
+        arabic: `نعم، سررت بلقائكم جميعًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Yes, nice to meet you all.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //17
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Sara, let’s start with you.`,
+        arabic: `سارة، لنبدأ بك.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Sara, let’s start with you.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //18
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `What do you like to do when you’re not in class?`,
+        arabic: `ماذا تحب أن تفعل عندما لا تكون في الصف؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `What do you like to do when you’re not in class.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //19
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Well, I have a few hobbies.`,
+        arabic: `حسنًا، لدي بعض الهوايات.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Well, I have a few hobbies.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //20
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `For example,`,
+        arabic: `على سبيل المثال`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `For example.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //21
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I belong to the hiking club.`,
+        arabic: `أنا أنتمي إلى نادي المشي لمسافات طويلة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I belong to the hiking club.mp3`,
+        audioQuestion: `Which club does Sara belong to?`,
+        answer: `She belongs to the hiking club.`,
+        Image:`hiking.png`
+      },
+      //22
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `We go hiking once a month.`,
+        arabic: `نحن نذهب للتنزه مرة في الشهر.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `We go hiking once a month.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //23
+       {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I have a lot of friends now in the club.`,
+        arabic: `لدي الكثير من الأصدقاء الآن في النادي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I have a lot of friends now in the club.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //24
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I am also interested in woodworking projects.`,
+        arabic: `أنا مهتم أيضًا بمشاريع الأعمال الخشبية.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I am also interested in woodworking projects.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //25
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `like building my own shelves`,
+        arabic: `أحب بناء رفوفي الخاصة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `like building my own shelves.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //26
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Yes, clubs are a good way to meet people.`,
+        arabic: `نعم، الأندية وسيلة جيدة لمقابلة الناس.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Yes, clubs are a good way to meet people.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //27
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hiro, do you belong to any clubs?`,
+        arabic: `هيرو، هل تنتمي لأي نوادي؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Hiro, do you belong to any clubs.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //28
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `No, not right now.`,
+        arabic: `لا، ليس الآن.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `No, not right now.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //29
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `but I’m on a soccer team.`,
+        arabic: `لكنني في فريق كرة قدم.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `but I’m on a soccer team.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //30
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `And I read a lot of books on history.`,
+        arabic: `وأنا أقرأ الكثير من الكتب عن التاريخ`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `And I read a lot of books on history.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //31
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `and go to history talks on campus.`,
+        arabic: `و أذهب إلى محاضرات التاريخ في الحرم الجامعي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `and go to history talks on campus.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //32
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Also, I’m interested in photography.`,
+        arabic: `أيضًا، أنا مهتم بالتصوير الفوتوغرافي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Also, I’m interested in photography.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //33
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `On weekends`,
+        arabic: `في عطلات نهاية الأسبوع`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `On weekends.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //34
+       {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I take a lot of pictures on my phone`,
+        arabic: `ألتقط الكثير من الصور على هاتفي`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `i take a lot of pictures on my phone.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //35
+      {
+        speaker: `Hiro:`,
+        keyWord: ``,
+        definition: ``,
+        english: `with my friends.`,
+        arabic: `مع أصدقائي`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `with my friends.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //36
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Oh, wow, I’m in the photography club.`,
+        arabic: `أوه، واو، أنا في نادي التصوير.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Oh, wow, I’m in the photography club.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //37
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `We have a lot of fun.`,
+        arabic: `نحن نقضي وقتاً ممتعاً كثيراً.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `We have a lot of fun.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //38
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hamad, how about you?`,
+        arabic: `حمد، ماذا عنك؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `hamad how about you.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //39
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `What are you interested in?`,
+        arabic: `ما الأشياء التي تهتم بها؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `What are you interested in.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //40
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I’m on the soccer team with Hiro.`,
+        arabic: `أنا في فريق كرة القدم مع هيرو.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I’m on the soccer team with Hiro.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //41
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `And I really like sports.`,
+        arabic: `وأنا يعجبني الرياضة حقًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `And I really like sports.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //42
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `so I play tennis, too.`,
+        arabic: `لذا أنا ألعب التنس أيضًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `so I play tennis, too.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //43
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I’m also good at math.`,
+        arabic: `أنا أيضًا بارع في الرياضيات.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I’m also good at math.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //44
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `so I’m in the math club.`,
+        arabic: `لذا أنا في نادي الرياضيات.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `so I’m in the math club.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //45
+       {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `That’s great.`,
+        arabic: `هذا رائع.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `That’s great.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //46
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Ben, what do you like to do?`,
+        arabic: `بن، ماذا يعجبك أن تفعل؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Ben, what do you like to do.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //47
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Hmm.  I’m not very good at sports.`,
+        arabic: `همم، لست جيدًا جدًا في الرياضة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Hmm  I’m not very good at sports.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //48
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `but I like to play video games.`,
+        arabic: `لكنني أحب لعب ألعاب الفيديو.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `but I like to play video games.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //49
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `and I play with other people online.`,
+        arabic: `وأنا ألعب مع أشخاص آخرين على الإنترنت.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `and I play with other people online.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //50
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I also read a lot of books.`,
+        arabic: `أنا أيضًا أقرأ الكثير من الكتب.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I also read a lot of books.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //51
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `and I get together with friends on Friday nights.`,
+        arabic: `وألتقي بأصدقائي ليلة الجمعة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `and I get together with friends on Friday nights.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //52
+      {
+        speaker: `Ben:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Oh, and I collect baseball hats.`,
+        arabic: `أوه، وأنا أجمع قبعات البيسبول.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Oh, and I collect baseball hats.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //53
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Baseball hats! That’s fun!`,
+        arabic: `قبعات البيسبول، هذا ممتع!`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Baseball hats That’s fun.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //54
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `OK, so we have talked about clubs.`,
+        arabic: `حسنًا، لقد تحدثنا عن النوادي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `OK, so we have talked about clubs.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //55
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `and playing sports`,
+        arabic: `وممارسة الرياضة`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `and playing sports.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //56
+       {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `and hobbies like photography and video games.`,
+        arabic: `والهوايات مثل التصوير الفوتوغرافي وألعاب الفيديو.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `and hobbies like photography and video games.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //57
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Does anyone want to add anything else? Hamad?`,
+        arabic: `هل يريد أي شخص إضافة شيء آخر؟ حمد؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Does anyone want to add anything else Hamad.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //58
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I also like to bake cookies.`,
+        arabic: `أنا أيضاً يعجبني أن أخبز البسكويت.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I also like to bake cookies.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //59
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `It helps me relax.`,
+        arabic: `إنه يساعدني على الاسترخاء.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `It helps me relax.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //60
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I give them to my friends.`,
+        arabic: `أعطيهم لأصدقائي`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I give them to my friends.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //61
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `when we get together on weekends.`,
+        arabic: `عندما نجتمع في عطلات نهاية الأسبوع.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `when we get together on weekends.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //62
+      {
+        speaker: `Hamad:`,
+        keyWord: ``,
+        definition: ``,
+        english: `They like the cookies a lot.`,
+        arabic: `هم تعجبهم البسكويت كثيرًا`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `They like the cookies a lot.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //63
+      {
+        speaker: `Sara:`,
+        keyWord: ``,
+        definition: ``,
+        english: `What about you, Mei?`,
+        arabic: `ماذا عنك، مي؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `What about you, Mei.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //64
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Oh, I like to bake and cook also.`,
+        arabic: `أوه، أنا يعجبني أن أخبز اطبخ أيضًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Oh, I like to bake and cook also.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //65
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `I make dinner with my friends on Saturday nights.`,
+        arabic: `أقوم بطهي العشاء مع أصدقائي ليلة السبت.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `I make dinner with my friends on Saturday nights.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //66
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `It’s a lot of fun!`,
+        arabic: `إنه ممتع جدًا!`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `It’s a lot of fun.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //67
+       {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `If you find something you’re good at and are interested in.`,
+        arabic: `إذا وجدت شيئًا تجيده وتكن مهتمًا به.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `If you find something you’re good at and are interested in.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      //68
+      {
+        speaker: `Mei:`,
+        keyWord: ``,
+        definition: ``,
+        english: `It helps you enjoy school more.`,
+        arabic: `إنه يساعدك على الاستمتاع بالمدرسة أكثر.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `it helps you enjoy school more.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+    ];
+
+    // QUIZ DATA - Unit One
+    const quizData = [
+      {
+        question: "What is Marcus interested in?",
+        audioClip: "questions.mp3",
+        options: ["cooking", "physical activities", "video games"],
+        correct: 1
+      },
+      {
+        question: "What does being active mean?",
+        audioClip: "questions.mp3",
+        options: ["playing a sport", "sleeping", "studying"],
+        correct: 0
+      },
+    ];
+
+    // DOM Elements - Lesson Mode
+    const speakEnglishBtn = document.getElementById("speakEnglish");
+    const speakArabicBtn = document.getElementById("speakArabic");
+    const speakSelectionBtn = document.getElementById("speakSelection");
+    const stopBtn = document.getElementById("stop");
+    const scrambleCheckbox = document.getElementById("scrambleCheckbox");
+
+    const q = document.getElementById("q");
+    const refer_to = document.getElementById("refer_to");
+    const back_to = document.getElementById("back_to");
+    const speaker = document.getElementById("speaker");
+    const keyWords = document.getElementById("keyWords");
+    const def = document.getElementById("def");
+    const english = document.getElementById("english");
+    const arabic = document.getElementById("arabic");
+    const scrambledText = document.getElementById("scrambledText");
+    const audio = document.getElementById("audio");
+    const image = document.getElementById("image");
+    const illustrationDetails = document.getElementById("illustrations");
+    const questionBasedOnAudio = document.getElementById("questionBasedOnAudio");
+    const audioIndexInput = document.getElementById("audioIndex");
+    const autoPlayCheckbox = document.getElementById("autoPlay");
+
+    const playList = document.getElementById("playList");
+    const usePlayListCheckbox = document.getElementById("usePlayList");
+
+    const definitionDetails = document.getElementById("definition");
+    const englishDetails = document.getElementById("englishDetails");
+    const arabicDetails = document.getElementById("arabicDetails");
+    const answer = document.getElementById("answer");
+    const answerDetails = document.getElementById("answerDetails");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const startQuizBtn = document.getElementById("startQuizBtn");
+
+    // DOM Elements - Quiz Mode
+    const lessonMode = document.getElementById("lessonMode");
+    const quizModeSection = document.getElementById("quizMode");
+    const quizProgress = document.getElementById("quizProgress");
+    const quizQuestion = document.getElementById("quizQuestion");
+    const quizOptions = document.getElementById("quizOptions");
+    const quizPrevBtn = document.getElementById("quizPrev");
+    const quizNextBtn = document.getElementById("quizNext");
+    const exitQuizBtn = document.getElementById("exitQuiz");
+    const quizScore = document.getElementById("quizScore");
+    const scoreText = document.getElementById("scoreText");
+    const scoreMessage = document.getElementById("scoreMessage");
+    const quizReview = document.getElementById("quizReview");
+    const reviewContent = document.getElementById("reviewContent");
+    const speakingIndicator = document.getElementById("speakingIndicator");
+    const speakQuestionBtn = document.getElementById("speakQuestionBtn");
+    const quizAudio = document.getElementById("quizAudio");
+    const quizAudioSource = document.getElementById("quizAudioSource");
+
+    // ========== SCRAMBLE FUNCTION ==========
+    function scrambleWords(text) {
+      const words = text.split(" ");
+      for (let i = words.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [words[i], words[j]] = [words[j], words[i]];
+      }
+      return words.join(" ");
+    }
+
+    function toggleScramble() {
+      const englishText = english.textContent.trim();
+      if (!englishText) return;
+
+      isScrambled = !isScrambled;
+      if (isScrambled) {
+        scrambledText.textContent = scrambleWords(englishText);
+        scrambledText.style.display = "block";
+      } else {
+        scrambledText.textContent = "";
+        scrambledText.style.display = "none";
+      }
+    }
+
+    scrambleCheckbox.addEventListener("change", toggleScramble);
+
+    // ========== PLAYLIST MODE FUNCTIONS ==========
+    function buildDefaultNav() {
+      navIndices = Array.from({ length: Sentences.length }, (_, i) => i);
+      navPos = currentAudioIndex; // keep position aligned with current clip
+      usePlayListMode = false;
+    }
+
+    function parsePlayListInput(text) {
+      const tokens = text.split(",").map(t => t.trim()).filter(Boolean);
+
+      const indices = [];
+      const seen = new Set();
+
+      tokens.forEach(tok => {
+        const n = parseInt(tok, 10);
+        if (!Number.isFinite(n)) return;
+
+        const idx = n - 1; // 1-based -> 0-based
+        if (idx < 0 || idx >= Sentences.length) return;
+
+        if (!seen.has(idx)) {
+          seen.add(idx);
+          indices.push(idx);
+        }
+      });
+
+      return indices;
+    }
+
+    function enablePlaylistMode() {
+      const indices = parsePlayListInput(playList.value);
+
+      if (indices.length === 0) {
+        usePlayListCheckbox.checked = false;
+        alert("Playlist is empty or invalid. Enter numbers like: 1, 3, 5");
+        return;
+      }
+
+      usePlayListMode = true;
+      navIndices = indices;
+
+      // keep current clip if it exists in playlist, else go to first
+      const currentInList = navIndices.indexOf(currentAudioIndex);
+      navPos = currentInList >= 0 ? currentInList : 0;
+
+      displayData();
+    }
+
+    function disablePlaylistMode() {
+      buildDefaultNav();
+      displayData();
+    }
+
+    usePlayListCheckbox.addEventListener("change", function() {
+      if (usePlayListCheckbox.checked) {
+        enablePlaylistMode();
+      } else {
+        disablePlaylistMode();
+      }
+    });
+
+    // Optional: press Enter in playlist input to apply (when checked)
+    playList.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && usePlayListCheckbox.checked) {
+        enablePlaylistMode();
+      }
+    });
+
+    // ========== LESSON MODE FUNCTIONS ==========
+    speakEnglishBtn.addEventListener("click", function() {
+      const s = Sentences[currentAudioIndex];
+      if (s && s.english && s.english.trim()) {
+        const cleanedText = s.english.replace(/<br\s*\/?>/gi, " ");
+        utterance.text = cleanedText;
+        utterance.lang = "en-US";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+        isSpeaking = true;
+        updateSpeakingUI();
+        utterance.onend = function() {
+          isSpeaking = false;
+          updateSpeakingUI();
+        };
+      }
+    });
+
+    speakArabicBtn.addEventListener("click", function() {
+      const s = Sentences[currentAudioIndex];
+      if (s && s.arabic && s.arabic.trim()) {
+        const cleanedText = s.arabic.replace(/<br\s*\/?>/gi, " ");
+        utterance.text = cleanedText;
+        utterance.lang = "ar-SA";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+        isSpeaking = true;
+        updateSpeakingUI();
+        utterance.onend = function() {
+          isSpeaking = false;
+          updateSpeakingUI();
+        };
+      }
+    });
+
+    speakSelectionBtn.addEventListener("click", function() {
+      const selectedText = window.getSelection().toString().trim();
+      if (!selectedText) return;
+
+      utterance.text = selectedText;
+      utterance.lang = "en-US";
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+      isSpeaking = true;
+      updateSpeakingUI();
+      utterance.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+    });
+
+    stopBtn.addEventListener("click", function() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+      updateSpeakingUI();
+    });
+
+    function updateButtonState() {
+      prevBtn.disabled = navPos === 0;
+      nextBtn.disabled = navPos === navIndices.length - 1;
+    }
+
+    function displayData() {
+      if (navPos < 0) navPos = 0;
+      if (navPos > navIndices.length - 1) navPos = navIndices.length - 1;
+
+      currentAudioIndex = navIndices[navPos];
+      const s = Sentences[currentAudioIndex];
+
+      // Progress in subset + original index
+      q.textContent =
+        (navPos + 1) + "/" + navIndices.length +
+        " (Clip " + (currentAudioIndex + 1) + "/" + Sentences.length + ")";
+
+      refer_to.textContent = s.refer_to || "";
+      back_to.textContent = s.back_to || "";
+
+      const referToContainer = document.getElementById("refer_to_container");
+      const backToContainer = document.getElementById("back_to_container");
+
+      referToContainer.style.display = s.refer_to && s.refer_to.trim() ? "block" : "none";
+      backToContainer.style.display = s.back_to && s.back_to.trim() ? "block" : "none";
+
+      keyWords.innerHTML = s.keyWord || "";
+      speaker.innerHTML = s.speaker || "";
+      def.innerHTML = s.definition || "";
+      english.innerHTML = s.english || "";
+      arabic.innerHTML = s.arabic || "";
+      audio.src = s.audio || "";
+      answer.innerHTML = s.answer || "";
+
+      // Reset scramble UI
+      scrambledText.textContent = "";
+      isScrambled = false;
+      scrambleCheckbox.checked = false;
+      scrambledText.style.display = "none";
+
+      questionBasedOnAudio.innerHTML = s.audioQuestion && s.audioQuestion.trim()
+        ? "<details aria-label='Audio question'><summary>Question</summary>" + s.audioQuestion + "</details>"
+        : "";
+
+      answerDetails.style.display = s.answer && s.answer.trim() ? "block" : "none";
+      definitionDetails.style.display = s.definition && s.definition.trim() ? "block" : "none";
+      englishDetails.style.display = s.english && s.english.trim() ? "block" : "none";
+      arabicDetails.style.display = s.arabic && s.arabic.trim() ? "block" : "none";
+
+      if (s.Image && s.Image.trim() !== "" && s.Image !== ".jpg") {
+        image.src = s.Image;
+        image.style.display = "block";
+        illustrationDetails.style.display = "block";
+      } else {
+        image.removeAttribute("src");
+        image.style.display = "none";
+        illustrationDetails.style.display = "none";
+      }
+
+      updateButtonState();
+    }
+
+    function resetDetails() {
+      definitionDetails.open = false;
+      englishDetails.open = false;
+      arabicDetails.open = false;
+      answerDetails.open = false;
+    }
+
+    function nextSentence() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+
+      if (navPos < navIndices.length - 1) {
+        navPos++;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) {
+          audio.play().catch(function() {});
+        }
+      }
+    }
+
+    function prevSentence() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+
+      if (navPos > 0) {
+        navPos--;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) {
+          audio.play().catch(function() {});
+        }
+      }
+    }
+
+    nextBtn.addEventListener("click", nextSentence);
+    prevBtn.addEventListener("click", prevSentence);
+
+    document.getElementById("search").addEventListener("click", function() {
+      const entered = parseInt(audioIndexInput.value, 10);
+      if (!Number.isFinite(entered)) {
+        alert("Enter a valid number.");
+        return;
+      }
+
+      const idx = entered - 1; // absolute clip index
+
+      if (idx < 0 || idx >= Sentences.length) {
+        alert("Enter a number between 1 and " + Sentences.length);
+        return;
+      }
+
+      if (usePlayListCheckbox.checked) {
+        const pos = navIndices.indexOf(idx);
+        if (pos === -1) {
+          alert("That clip is not in your playlist subset.");
+          return;
+        }
+        navPos = pos;
+        displayData();
+      } else {
+        navPos = idx;
+        displayData();
+      }
+    });
+
+    audioIndexInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        document.getElementById("search").click();
+      }
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (!quizModeActive) {
+        if (e.key === "ArrowRight") nextSentence();
+        if (e.key === "ArrowLeft") prevSentence();
+      } else {
+        if (e.key === "ArrowRight") nextQuizQuestion();
+        if (e.key === "ArrowLeft") prevQuizQuestion();
+      }
+    });
+
+    function updateSpeakingUI() {
+      if (isSpeaking) {
+        speakingIndicator.classList.add("active");
+      } else {
+        speakingIndicator.classList.remove("active");
+      }
+    }
+
+    // ========== QUIZ MODE FUNCTIONS ==========
+    startQuizBtn.addEventListener("click", function() {
+      quizModeActive = true;
+      speechSynthesis.cancel();
+      lessonMode.classList.add("hidden");
+      quizModeSection.classList.add("active");
+      currentQuizQuestion = 0;
+      quizAnswers = new Array(quizData.length).fill(null);
+      loadQuizQuestion();
+    });
+
+    exitQuizBtn.addEventListener("click", function() {
+      quizModeActive = false;
+      quizModeSection.classList.remove("active");
+      lessonMode.classList.remove("hidden");
+      speechSynthesis.cancel();
+      quizAudio.pause();
+      quizScore.style.display = "none";
+      quizReview.style.display = "none";
+    });
+
+    function loadQuizQuestion() {
+      const question = quizData[currentQuizQuestion];
+
+      quizProgress.textContent = "Question " + (currentQuizQuestion + 1) + " of " + quizData.length;
+      quizQuestion.textContent = question.question;
+
+      // Load audio clip for this question
+      quizAudioSource.src = question.audioClip;
+      quizAudio.load();
+
+      // Build options (NO inline onclick; use addEventListener)
+      quizOptions.innerHTML = "";
+      question.options.forEach(function(option, index) {
+        const optionDiv = document.createElement("div");
+        optionDiv.className = "quiz-option";
+
+        const left = document.createElement("div");
+        left.className = "quiz-option-content";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.id = "quizOption" + index;
+        input.name = "quizAnswer";
+        input.value = index;
+        input.checked = quizAnswers[currentQuizQuestion] === index;
+
+        const label = document.createElement("label");
+        label.htmlFor = input.id;
+        label.textContent = option;
+
+        left.appendChild(input);
+        left.appendChild(label);
+
+        const speakBtn = document.createElement("button");
+        speakBtn.type = "button";
+        speakBtn.className = "option-speak-btn";
+        speakBtn.textContent = "🔊";
+        speakBtn.setAttribute(
+          "aria-label",
+          "Read option " + String.fromCharCode(65 + index)
+        );
+        speakBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          speakQuizOption(index);
+        });
+
+        optionDiv.appendChild(left);
+        optionDiv.appendChild(speakBtn);
+
+        quizOptions.appendChild(optionDiv);
+      });
+
+      updateQuizButtonState();
+    }
+
+    function updateQuizButtonState() {
+      quizPrevBtn.disabled = currentQuizQuestion === 0;
+      if (currentQuizQuestion === quizData.length - 1) {
+        quizNextBtn.textContent = "Submit Quiz →";
+        quizNextBtn.setAttribute("aria-label", "Submit quiz");
+      } else {
+        quizNextBtn.textContent = "Next →";
+        quizNextBtn.setAttribute("aria-label", "Next question");
+      }
+    }
+
+    function nextQuizQuestion() {
+      const selected = document.querySelector('input[name="quizAnswer"]:checked');
+      if (!selected) {
+        alert("Please select an answer before proceeding!");
+        return;
+      }
+
+      quizAnswers[currentQuizQuestion] = parseInt(selected.value, 10);
+
+      if (currentQuizQuestion < quizData.length - 1) {
+        currentQuizQuestion++;
+        loadQuizQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuizQuestion() {
+      const selected = document.querySelector('input[name="quizAnswer"]:checked');
+      if (selected) {
+        quizAnswers[currentQuizQuestion] = parseInt(selected.value, 10);
+      }
+
+      if (currentQuizQuestion > 0) {
+        currentQuizQuestion--;
+        loadQuizQuestion();
+      }
+    }
+
+    quizNextBtn.addEventListener("click", nextQuizQuestion);
+    quizPrevBtn.addEventListener("click", prevQuizQuestion);
+    speakQuestionBtn.addEventListener("click", speakQuizQuestion);
+
+    function speakQuizQuestion() {
+      speechSynthesis.cancel();
+      const question = quizData[currentQuizQuestion].question;
+      const utteranceQuestion = new SpeechSynthesisUtterance(question);
+      utteranceQuestion.lang = "en-US";
+      utteranceQuestion.onstart = function() {
+        isSpeaking = true;
+        updateSpeakingUI();
+      };
+      utteranceQuestion.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+      speechSynthesis.speak(utteranceQuestion);
+    }
+
+    function speakQuizOption(index) {
+      speechSynthesis.cancel();
+      const option = quizData[currentQuizQuestion].options[index];
+      const utteranceOption = new SpeechSynthesisUtterance(option);
+      utteranceOption.lang = "en-US";
+      utteranceOption.onstart = function() {
+        isSpeaking = true;
+        updateSpeakingUI();
+      };
+      utteranceOption.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+      speechSynthesis.speak(utteranceOption);
+    }
+
+    function submitQuiz() {
+      const correct = quizAnswers.filter(function(answer, index) {
+        return answer === quizData[index].correct;
+      }).length;
+
+      const percentage = Math.round((correct / quizData.length) * 100);
+
+      scoreText.innerHTML =
+        "<strong>" + correct + " out of " + quizData.length + " correct</strong><br>Score: " + percentage + "%";
+
+      let message = "";
+      if (percentage === 100) {
+        message = "Perfect! You understood the conversation perfectly! 🏆";
+      } else if (percentage >= 80) {
+        message = "Excellent! Your listening comprehension is very good! 🌟";
+      } else if (percentage >= 60) {
+        message = "Good job! You understood most of the conversation. 📚";
+      } else if (percentage >= 40) {
+        message = "Not bad! Listen again and try to understand more details. 💪";
+      } else {
+        message = "Keep practicing! Listen carefully and try again! 🚀";
+      }
+      scoreMessage.textContent = message;
+
+      quizScore.classList.remove("fail");
+      if (percentage < 60) {
+        quizScore.classList.add("fail");
+      }
+
+      generateQuizReview();
+
+      quizScore.style.display = "block";
+      quizReview.style.display = "block";
+    }
+
+    function generateQuizReview() {
+      reviewContent.innerHTML = "";
+
+      quizData.forEach(function(question, index) {
+        const isCorrect = quizAnswers[index] === question.correct;
+        const reviewItem = document.createElement("details");
+
+        const correctClass = isCorrect ? "✓ Correct" : "✗ Incorrect";
+        const correctAnswer = isCorrect ? "" : "<p><strong>Correct answer:</strong> " + question.options[question.correct] + "</p>";
+
+        reviewItem.innerHTML =
+          "<summary>Question " + (index + 1) + ": " + correctClass + "</summary>" +
+          "<p><strong>Question:</strong> " + question.question + "</p>" +
+          "<p><strong>Your answer:</strong> " + (quizAnswers[index] !== null ? question.options[quizAnswers[index]] : "Not answered") + "</p>" +
+          correctAnswer;
+
+        reviewContent.appendChild(reviewItem);
+      });
+    }
+
+    // Initialize
+    buildDefaultNav();
+    displayData();
+  </script>
+</body>
+</html>
+```
